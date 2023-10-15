@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# Edited by Professor Jared Sharpe for MISY225
 
 import streamlit as st
 from streamlit.logger import get_logger
@@ -32,17 +34,10 @@ def run():
         """
         Streamlit is an open-source app framework built specifically for
         Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
+        The majority of this code is given for free! As is the nature of open-source projects.
+        
+        What you as programmers need to learn how to do is become comforable working within an existing framework! 
+        I have included some demos from a dataset you are not allowed to use for your final project :-) 
     """
     )
 
