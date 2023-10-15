@@ -16,6 +16,7 @@ from urllib.error import URLError
 
 import altair as alt
 import pandas as pd
+import matplotlib.pyplot as plt
 
 import streamlit as st
 from streamlit.hello.utils import show_code
@@ -23,34 +24,33 @@ from streamlit.hello.utils import show_code
 
 def data_frame_demo():
     @st.cache_data
-    def get_UN_data():
-        AWS_BUCKET_URL = "https://streamlit-demo-data.s3-us-west-2.amazonaws.com"
-        df = pd.read_csv(AWS_BUCKET_URL + "/agri.csv.gz")
-        return df.set_index("Region")
+    def get_data():
+        
+        df = pd.read_csv("titanic.csv")
+        return df.sort_values("pclass")
 
     try:
-        df = get_UN_data()
-        countries = st.multiselect(
-            "Choose countries", list(df.index), ["China", "United States of America"]
+        df = get_data()
+        tclass = st.multiselect(
+            "Choose Traveler's Class", list(df.pclass.unique()), [1, 2,3]
         )
-        if not countries:
-            st.error("Please select at least one country.")
+        if not tclass:
+            st.error("Please select at least one Traveler's Class.")
         else:
-            data = df.loc[countries]
-            data /= 1000000.0
-            st.write("### Gross Agricultural Production ($B)", data.sort_index())
+            t = df.rename(columns={"pclass": "Traveler's Class",
+                  "survived":"Survived"})
+            tg = t[["Traveler's Class",'Survived']].groupby(by="Traveler's Class")
+            table1 = tg.mean("Survived")
+            table1.Survived = (round(table1.Survived,2) *100).astype(str)+"%"
+            st.write("### Chance of Survival", table1)
 
-            data = data.T.reset_index()
-            data = pd.melt(data, id_vars=["index"]).rename(
-                columns={"index": "year", "value": "Gross Agricultural Product ($B)"}
-            )
             chart = (
-                alt.Chart(data)
+                alt.Chart(table1)
                 .mark_area(opacity=0.3)
                 .encode(
-                    x="year:T",
-                    y=alt.Y("Gross Agricultural Product ($B):Q", stack=None),
-                    color="Region:N",
+                    x="Traveler's Class:O",
+                    y=alt.Y("Survived:Q", stack=None),
+                    #color="Region:N",
                 )
             )
             st.altair_chart(chart, use_container_width=True)
@@ -68,8 +68,7 @@ st.set_page_config(page_title="DataFrame Demo", page_icon="📊")
 st.markdown("# DataFrame Demo")
 st.sidebar.header("DataFrame Demo")
 st.write(
-    """This demo shows how to use `st.write` to visualize Pandas DataFrames.
-(Data courtesy of the [UN Data Explorer](http://data.un.org/Explorer.aspx).)"""
+    """This demo shows how to use `st.write` to visualize Pandas DataFrames."""
 )
 
 data_frame_demo()
