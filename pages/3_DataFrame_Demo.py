@@ -16,6 +16,7 @@ from urllib.error import URLError
 
 import altair as alt
 import pandas as pd
+import numpy as np
 ## Anytime you add a package, you need to...
 #  Add it to requirements.text and 
 # "> Rebuild Container" in the command bar above
@@ -47,7 +48,7 @@ def data_frame_demo():
             t['Perished'] = [1 if s == 0 else 0 for s in t.Survived]
             tg = t[["Traveler's Class",'Survived','Perished']].groupby(by=["Traveler's Class"])
             table1 = tg.mean("Survived")
-            table1.Survived = (np.round(chart.Survived,3)*100).astype(str)+"%"
+            table1.Survived = (np.round(table1.Survived,3)*100).astype(str)+"%"
 
             st.write("### Chance of Survival", table1[["Survived"]])
 
