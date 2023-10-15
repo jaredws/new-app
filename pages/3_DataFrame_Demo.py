@@ -16,6 +16,9 @@ from urllib.error import URLError
 
 import altair as alt
 import pandas as pd
+## Anytime you add a package, you need to...
+#  Add it to requirements.text and 
+# "> Rebuild Container" in the command bar above
 import matplotlib.pyplot as plt
 
 import streamlit as st
@@ -37,23 +40,32 @@ def data_frame_demo():
         if not tclass:
             st.error("Please select at least one Traveler's Class.")
         else:
-            t = df.rename(columns={"pclass": "Traveler's Class",
+            t = t.rename(columns={"pclass": "Traveler's Class",
+                      "sex":"Sex",
+                      "age":"Age",
                   "survived":"Survived"})
-            tg = t[["Traveler's Class",'Survived']].groupby(by="Traveler's Class")
+            t['Perished'] = [1 if s == 0 else 0 for s in t.Survived]
+            tg = t[["Traveler's Class",'Survived','Perished']].groupby(by=["Traveler's Class"])
             table1 = tg.mean("Survived")
-            table1.Survived = (round(table1.Survived,2) *100).astype(str)+"%"
-            st.write("### Chance of Survival", table1)
+            table1.Survived = (np.round(chart.Survived,3)*100).astype(str)+"%"
 
-            chart = (
-                alt.Chart(table1)
-                .mark_area(opacity=0.3)
-                .encode(
-                    x="Traveler's Class:O",
-                    y=alt.Y("Survived:Q", stack=None),
-                    #color="Region:N",
-                )
-            )
-            st.altair_chart(chart, use_container_width=True)
+            st.write("### Chance of Survival", table1[["Survived"]])
+
+            tg_sum = tg.sum()
+
+            ax = tg_sum.plot(kind="bar")
+
+            # Get a Matplotlib figure from the axes object for formatting purposes
+            fig = ax.get_figure()
+
+            # Change the axes labels
+            ax.set_xlabel("Traveler's Class", fontsize = 15)
+            ax.set_ylabel("Count", fontsize = 15)
+
+            # Use this to show the plot in a new window
+            plt.xticks(rotation = 0)
+            plt.show();
+
     except URLError as e:
         st.error(
             """
