@@ -15,31 +15,36 @@
 import time
 
 import numpy as np
-
+import pandas as pd
+import matplotlib.pyplot as plt
 import streamlit as st
 from streamlit.hello.utils import show_code
 
 
 def plotting_demo():
-    progress_bar = st.sidebar.progress(0)
-    status_text = st.sidebar.empty()
-    last_rows = np.random.randn(1, 1)
-    chart = st.line_chart(last_rows)
+    child_max = st.slider("How old was considered a 'child?'", 0, 100, 18)
+    t = pd.read_csv("titanic.csv")
+    t = t.rename(columns={"pclass": "Traveler's Class",
+                      "sex":"Sex",
+                      "age":"Age",
+                  "survived":"Survived"})
+    t['Perished'] = [1 if s == 0 else 0 for s in t.Survived]
+    t['Age Category'] = ["Child" if a <=child_max else "Adult" for a in t['Age']]
+    tg = t[['Age Category','Survived','Perished']].groupby(by=["Age Category"])
+    tg_sum = tg.sum()
 
-    for i in range(1, 101):
-        new_rows = last_rows[-1, :] + np.random.randn(5, 1).cumsum(axis=0)
-        status_text.text("%i%% Complete" % i)
-        chart.add_rows(new_rows)
-        progress_bar.progress(i)
-        last_rows = new_rows
-        time.sleep(0.05)
+    ax = tg_sum.plot(kind="bar")
 
-    progress_bar.empty()
+    # Get a Matplotlib figure from the axes object for formatting purposes
+    fig = ax.get_figure()
 
-    # Streamlit widgets automatically run the script from top to bottom. Since
-    # this button is not connected to any other logic, it just causes a plain
-    # rerun.
-    st.button("Re-run")
+    # Change the axes labels
+    ax.set_xlabel("Age Category", fontsize = 15)
+    ax.set_ylabel("Count", fontsize = 15)
+
+    # Use this to show the plot in a new window
+    plt.xticks(rotation = 0)
+    plt.show();
 
 
 st.set_page_config(page_title="Plotting Demo", page_icon="📈")

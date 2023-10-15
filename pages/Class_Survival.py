@@ -41,7 +41,7 @@ def data_frame_demo():
         if not tclass:
             st.error("Please select at least one Traveler's Class.")
         else:
-            t = t.rename(columns={"pclass": "Traveler's Class",
+            t = df.rename(columns={"pclass": "Traveler's Class",
                       "sex":"Sex",
                       "age":"Age",
                   "survived":"Survived"})
