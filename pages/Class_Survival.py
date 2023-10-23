@@ -38,34 +38,30 @@ def data_frame_demo():
         tclass = st.multiselect(
             "Choose Traveler's Class", list(df.pclass.unique()), [1, 2,3]
         )
+        port = st.multiselect(
+            "Choose Traveler's Embarking Port", list(df.embarked.unique()), ["C","Q","S"]
+        )
         if not tclass:
             st.error("Please select at least one Traveler's Class.")
+        if not port:
+            st.error("Please select at least one Traveler's Embarking Port.")
         else:
+            df = df[df['pclass'].isin(tclass)]
+            df = df[df['embarked'].isin(port)]
             t = df.rename(columns={"pclass": "Traveler's Class",
-                      "sex":"Sex",
-                      "age":"Age",
-                  "survived":"Survived"})
+                        "sex":"Sex",
+                        "age":"Age",
+                        "embarked":"Embarking Port",
+                    "survived":"Survived"})
             t['Perished'] = [1 if s == 0 else 0 for s in t.Survived]
-            tg = t[["Traveler's Class",'Survived','Perished']].groupby(by=["Traveler's Class"])
-            table1 = tg.mean("Survived")
-            table1.Survived = (np.round(table1.Survived,3)*100).astype(str)+"%"
+            tg = t[["Traveler's Class",'Survived','Perished', 'Embarking Port']].groupby(by=["Traveler's Class", "Embarking Port"])
+            table1 = tg.mean()
+            table1.Survived = table1.Survived.apply(lambda s: str(round(s*100,1)).format("{:.f2}")+"%")
+            table1.Perished = table1.Perished.apply(lambda p: str(round(p*100,1)).format("{:.f2}")+"%")
+            print(table1)
 
             st.write("### Chance of Survival", table1[["Survived"]])
 
-            tg_sum = tg.sum()
-
-            ax = tg_sum.plot(kind="bar")
-
-            # Get a Matplotlib figure from the axes object for formatting purposes
-            fig = ax.get_figure()
-
-            # Change the axes labels
-            ax.set_xlabel("Traveler's Class", fontsize = 15)
-            ax.set_ylabel("Count", fontsize = 15)
-
-            # Use this to show the plot in a new window
-            plt.xticks(rotation = 0)
-            plt.show();
 
     except URLError as e:
         st.error(
