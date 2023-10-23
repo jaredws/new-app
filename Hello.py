@@ -15,12 +15,17 @@
 # Edited by Professor Jared Sharpe for MISY225
 
 import streamlit as st
+import matplotlib.pyplot as plt
 from streamlit.logger import get_logger
 
 LOGGER = get_logger(__name__)
 
 
 def run():
+
+    plt.style.use("_mpl-gallery")
+
+
     st.set_page_config(
         page_title="Hello",
         page_icon="👋",

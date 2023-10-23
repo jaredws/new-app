@@ -20,9 +20,8 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from streamlit.hello.utils import show_code
 
-
 def plotting_demo():
-    child_max = st.slider("How old was considered a 'child?'", 0, 100, 18)
+    child_max = st.slider("How old was considered a 'child?'", 8, 25, 16)
     t = pd.read_csv("titanic.csv")
     t = t.rename(columns={"pclass": "Traveler's Class",
                       "sex":"Sex",
@@ -33,27 +32,30 @@ def plotting_demo():
     tg = t[['Age Category','Survived','Perished']].groupby(by=["Age Category"])
     tg_sum = tg.sum()
 
+
     ax = tg_sum.plot(kind="bar")
 
     # Get a Matplotlib figure from the axes object for formatting purposes
     fig = ax.get_figure()
+    
 
     # Change the axes labels
     ax.set_xlabel("Age Category", fontsize = 15)
     ax.set_ylabel("Count", fontsize = 15)
+    ax.set_ylim(0,550)
 
     # Use this to show the plot in a new window
+    st.set_option('deprecation.showPyplotGlobalUse', False)
     plt.xticks(rotation = 0)
-    plt.show();
+    st.pyplot()
 
 
-st.set_page_config(page_title="Plotting Demo", page_icon="📈")
-st.markdown("# Plotting Demo")
-st.sidebar.header("Plotting Demo")
+st.set_page_config(page_title="Age vs. Survival Plot", page_icon="📈")
+st.markdown("# Age-Survival Plot")
+st.sidebar.header("Age-Survival Plot")
 st.write(
-    """This demo illustrates a combination of plotting and animation with
-Streamlit. We're generating a bunch of random numbers in a loop for around
-5 seconds. Enjoy!"""
+    """Here we can view how the chance of survival changes for children as we move the slider 
+    around what age was considered a 'child.'"""
 )
 
 plotting_demo()
