@@ -58,9 +58,8 @@ def data_frame_demo():
             table1 = tg.mean()
             table1.Survived = table1.Survived.apply(lambda s: str(round(s*100,1)).format("{:.f2}")+"%")
             table1.Perished = table1.Perished.apply(lambda p: str(round(p*100,1)).format("{:.f2}")+"%")
-            print(table1)
-
-            st.write("### Chance of Survival", table1[["Survived"]])
+            
+            st.write("### Chance of Survival", table1)
 
 
     except URLError as e:
