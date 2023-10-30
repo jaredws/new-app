@@ -72,11 +72,12 @@ def data_frame_demo():
         )
 
 
-st.set_page_config(page_title="DataFrame Demo", page_icon="📊")
-st.markdown("# DataFrame Demo")
-st.sidebar.header("DataFrame Demo")
+st.set_page_config(page_title="Survival Table", page_icon="📊")
+st.markdown("# Survival Table")
+st.sidebar.header("Survival Table")
 st.write(
-    """This demo shows how to use `st.write` to visualize Pandas DataFrames."""
+    """This page shows the percentage of passengers who survived and perished organized by
+    their Passenger Class and Embarking Port."""
 )
 
 data_frame_demo()
