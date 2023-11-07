@@ -29,6 +29,8 @@ def run():
         page_title="Home",
         page_icon="👋",
     )
+    
+    st.sidebar.header("Home")
 
     st.write("# Welcome to Streamlit! 👋")
 
